@@ -2,6 +2,7 @@ import SwiftUI
 
 struct DetailView: View {
     let scrum: DailyScrum
+    @State var isPresentingEditView = false
     var body: some View {
         List{
             Section(header: Text("Meeting Info"))
@@ -37,8 +38,29 @@ struct DetailView: View {
             }
         }
         .navigationTitle(scrum.title)
+        .sheet(isPresented: $isPresentingEditView){
+            NavigationView{
+                DetailEditView()
+                    .navigationTitle(scrum.title)
+                    .toolbar{
+                        ToolbarItem(placement: .cancellationAction)
+                        {
+                            Button("Cancel"){
+                                isPresentingEditView = false
+                            }
+                        }
+                        ToolbarItem(placement: .confirmationAction, content: {Button("Confirm", action: { isPresentingEditView = false})})
+                    }
+            }
+        }
+        .toolbar{
+            Button("Edit"){
+                isPresentingEditView = true
+            }
+        }
     }
 }
+//sheet modifier cover the underlying view with new view like a sheet paper
 
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {

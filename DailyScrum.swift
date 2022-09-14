@@ -31,6 +31,18 @@ extension DailyScrum{
             self.name = name
         }
     }
+    
+    struct Data{
+        var title: String = ""
+        var attendees: [Attendee] = []
+        var lengthInMinutes: Double = 5
+        var theme: Theme = .Teal
+    }
+    
+    //a empty vessel for temp data
+    var data: Data{
+        Data(title: title, attendees: attendees,       lengthInMinutes: Double(lengthInMinutes), theme: theme)
+    }
 }
 
 extension DailyScrum{
@@ -43,3 +55,4 @@ extension DailyScrum{
     ]
 
 }
+
