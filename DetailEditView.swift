@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct DetailEditView: View {
-    @State private var data = DailyScrum.Data()//initalize nested type
+    @Binding var data: DailyScrum.Data
     @State private var newAttendeeName = ""
     //voiceOver will use Text in Slide to identify what to read
     var body: some View {
@@ -17,6 +17,7 @@ struct DetailEditView: View {
                     Text("\(Int(data.lengthInMinutes)) minutes")
                         .accessibilityHidden(true)
                 }
+                ThemePicker(selection: $data.theme)
             }
             Section(header: Text("Attendees"))
             {
@@ -51,6 +52,6 @@ struct DetailEditView: View {
 
 struct DetailEditView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailEditView()
+        DetailEditView(data: .constant(DailyScrum.Data()))
     }
 }

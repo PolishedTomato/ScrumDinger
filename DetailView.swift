@@ -1,13 +1,14 @@
 import SwiftUI
 
 struct DetailView: View {
-    let scrum: DailyScrum
-    @State var isPresentingEditView = false
+    @Binding var scrum: DailyScrum
+    @State private var data = DailyScrum.Data()
+    @State private var isPresentingEditView = false
     var body: some View {
         List{
             Section(header: Text("Meeting Info"))
             {
-                NavigationLink(destination: ContentView()){
+                NavigationLink(destination: ContentView(scrum: $scrum)){
                     Label("Start Meeting", systemImage: "timer")
                         .font(.headline)
                         .foregroundColor(.accentColor)
@@ -36,11 +37,23 @@ struct DetailView: View {
                     Label(attendee.name, systemImage: "person")
                 }
             }
+            Section(header: Text("History")){
+                if scrum.history.isEmpty{
+                    Label("No meeting yet", systemImage: "hare")
+                }
+                ForEach(scrum.history){
+                    h in HStack{
+                            Image(systemName: "calender")
+                            Text(h.data, style: .date)
+                        }
+                    
+                }
+            }
         }
         .navigationTitle(scrum.title)
         .sheet(isPresented: $isPresentingEditView){
             NavigationView{
-                DetailEditView()
+                DetailEditView(data: $data)
                     .navigationTitle(scrum.title)
                     .toolbar{
                         ToolbarItem(placement: .cancellationAction)
@@ -49,13 +62,18 @@ struct DetailView: View {
                                 isPresentingEditView = false
                             }
                         }
-                        ToolbarItem(placement: .confirmationAction, content: {Button("Confirm", action: { isPresentingEditView = false})})
+                        ToolbarItem(placement: .confirmationAction, content: {Button("Confirm", action: { 
+                            scrum.update(from: data)
+                            isPresentingEditView = false
+                            return 
+                        })})
                     }
             }
         }
         .toolbar{
             Button("Edit"){
                 isPresentingEditView = true
+                data = scrum.data
             }
         }
     }
@@ -65,7 +83,7 @@ struct DetailView: View {
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView{
-            DetailView(scrum: DailyScrum.sampleData[2])
+            DetailView(scrum: .constant(DailyScrum.sampleData[2]))
         }
     }
 }

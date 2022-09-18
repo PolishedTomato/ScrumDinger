@@ -1,11 +1,13 @@
 import SwiftUI
-
-struct DailyScrum: Identifiable{
-    let id = UUID()
+//make dailyScrum struct conform to codable
+//for a struct to be codable, its stored property have to be codable
+struct DailyScrum: Identifiable, Codable{
+    var id = UUID()
     var title: String
     var attendees: [Attendee]
     var lengthInMinutes: Int
     var theme: Theme
+    var history: [History] = []
     
     init(title: String, attendees: [String], lengthInMinutes: Int, theme: Theme)
     {
@@ -21,7 +23,7 @@ struct DailyScrum: Identifiable{
 }
 
 extension DailyScrum{
-    struct Attendee: Identifiable{
+    struct Attendee: Identifiable, Codable{
         let id: UUID
         var name: String
         
@@ -49,10 +51,28 @@ extension DailyScrum{
     //sample data
     static let sampleData: [DailyScrum] =
     [
-        DailyScrum(title: "Design", attendees: ["John","Lei","God"], lengthInMinutes: 30, theme: .Yellow ),
+        DailyScrum(title: "Design", attendees: ["John","Lei","God"], lengthInMinutes: 1, theme: .Yellow ),
         DailyScrum(title: "Apple Dev", attendees: ["Lei","God"], lengthInMinutes: 50 , theme: .Cyan ),
         DailyScrum(title: "App Learn", attendees: ["John","Lei","God"], lengthInMinutes: 60 , theme: .Blue )
     ]
-
 }
+
+extension DailyScrum{
+    mutating func update(from: DailyScrum.Data){
+        self.title = from.title
+        self.attendees = from.attendees
+        self.lengthInMinutes = Int(from.lengthInMinutes)
+        self.theme = from.theme
+    }
+}
+
+extension DailyScrum{
+    init(data: Data){
+        title = data.title
+        attendees = data.attendees
+        lengthInMinutes = Int(data.lengthInMinutes)
+        theme = data.theme
+    }
+}
+
 

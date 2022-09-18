@@ -1,8 +1,14 @@
 import SwiftUI
 
-enum Theme: String{
+enum Theme: String, CaseIterable, Identifiable, Codable{
     case Red, Orange, Yellow, Green, Mint, Teal, Cyan, Blue, Indigo, Purple, Pink, Brown 
     
+    var name: String{
+        rawValue.capitalized
+    }
+    var id: String{
+        name
+    }
     var accentColor: Color{
         switch self{
             case .Red, .Orange, .Yellow, .Teal, .Pink:
