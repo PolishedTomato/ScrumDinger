@@ -137,7 +137,9 @@ extension DailyScrum {
     }
 }
 
-//speaker member of attendee defined here
+//speaker compute property defined here
+//this extension is only defined for array whose element is dailySCrum.Attendee
+//used in init()
 extension Array where Element == DailyScrum.Attendee {
     var speakers: [ScrumTimer.Speaker] {
         if isEmpty {

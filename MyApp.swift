@@ -3,6 +3,7 @@ import SwiftUI
 @main
 struct MyApp: App {
     @StateObject private var store = ScrumStore()
+    @State private var errorWrapper: ErrorWrapper?
     var body: some Scene {
         WindowGroup {
             NavigationView{
@@ -12,7 +13,7 @@ struct MyApp: App {
                             try await ScrumStore.save(scrums: store.scrums)
                         }
                         catch{
-                            fatalError("fail to save")
+                            errorWrapper = ErrorWrapper(error: error, guidance: "Save fail, try again")
                         }
                     }
                 }
@@ -23,9 +24,13 @@ struct MyApp: App {
                     store.scrums = try await ScrumStore.load()
                 }
                 catch{
-                    fatalError("fail to load")
+                    errorWrapper = ErrorWrapper(error: error, guidance: "scrumDinger will load save data")
                 }
             }
+            .sheet(item: $errorWrapper, onDismiss: {store.scrums = DailyScrum.sampleData}, content: {
+                wrapper in 
+                ErrorView(errorWrapper: wrapper)
+            })
         }
     }
 }

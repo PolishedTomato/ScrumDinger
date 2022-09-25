@@ -42,11 +42,13 @@ struct DetailView: View {
                     Label("No meeting yet", systemImage: "hare")
                 }
                 ForEach(scrum.history){
-                    h in HStack{
+                    h in 
+                    NavigationLink(destination: HistoryView(history: h), label: {
+                        HStack{
                             Image(systemName: "calender")
-                            Text(h.data, style: .date)
+                            Text(h.date, style: .date)
                         }
-                    
+                    })
                 }
             }
         }
